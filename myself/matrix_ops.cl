@@ -18,8 +18,32 @@ __kernel void multiply_matrices(const int M, const int N, const int K,
                       const __global int* B,
                       __global int* C) {
     
-    // TODO: add your matrix multiplication code here
+    
+    int sum;
+    int colindex = 0;
+    int rowindex = 0;
+    for(int j = 0; j<M*N;j++)
+    {
+        
+        for(int i = 0; i<M;i++)
+        {
+            sum +=  A[i+rowindex] * B[M*i+colindex];
 
+        }
+        colindex += 1;
+        if(colindex > M-1){
+            colindex = 0;
+            rowindex += M;
+        }
+        if(rowindex>(M-1)*N){
+            rowindex = 0;
+        }
+
+        C[j] = sum;
+        sum = 0;
+        
+    }
+    
 }
 
 

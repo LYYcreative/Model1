@@ -60,8 +60,6 @@ int main(int argc, char** argv) {
    setup_openCL_device_context_queue_kernel( (char*) "./matrix_ops.cl" , (char*) "multiply_matrices");
 
 
-   //this function is used to load/copy memory and link arguments -- you will need to change this 
-   //for your program as this varies from one implementation to another
    setup_kernel_memory();
    copy_kernel_args();
 

@@ -10,6 +10,7 @@
 using namespace std::chrono;
 using namespace std;
 
+//function to initial the origenal vector
 void vectorAdd(int vector[], int size)
 {
 	int num = 0;
@@ -27,7 +28,7 @@ void vectorAdd(int vector[], int size)
 		}
 	}
 }
-
+//quick sort
 void qsort(int left, int right, int arr[])
 {
     if(left>right){
@@ -35,8 +36,10 @@ void qsort(int left, int right, int arr[])
     }
     int i,j,base,temp;
     i = left; j = right;
-    base = arr[left];
+    base = arr[left];//let the left most element as basis
 
+    //j moving from right to left, i moving from left to right
+    //if find an array[j] less than base-value and an array[i] greater than base-value, swap array[i] and array[j]
     while(i<j)
     {
         while(arr[j] >= base && i<j)
@@ -52,12 +55,14 @@ void qsort(int left, int right, int arr[])
 
         }
     }
+	
+    //puts the base value to the right place
     arr[left] = arr[i];
     arr[i] = base;
     qsort(left, i-1, arr);
     qsort(i+1, right, arr);
 }
-
+//merge any two sequential parts
 void Merge(int left, int right, int arr[])
 {
     int mid = (left+right)/2;
@@ -84,7 +89,7 @@ void Merge(int left, int right, int arr[])
     return;
 
 }
-
+//print the vector
 void Print(int arr[], int size)
 {
     for(int i = 0; i<size; i++)
@@ -126,19 +131,20 @@ int main(int argc, char** argv)
 
     }
     auto start = high_resolution_clock::now();
-
+    //scatter the origenal vector v1
     MPI_Scatter(v1, length, MPI_INT, sub_v1, length, MPI_INT, 0,MPI_COMM_WORLD);
 
-    qsort(0,length-1,sub_v1);
+    qsort(0,length-1,sub_v1);//sort each sub_v1
 
-    MPI_Gather(sub_v1, length, MPI_INT, result, length, MPI_INT, 0, MPI_COMM_WORLD);
-    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Gather(sub_v1, length, MPI_INT, result, length, MPI_INT, 0, MPI_COMM_WORLD);//gather each sub_v1 and put them to a result vector
+    MPI_Barrier(MPI_COMM_WORLD);//wait for all tasks end
 
     if(rank == 0)
     {
         Merge(0,(length*2)-1,result);
         Merge(length*2,size-1,result);
         Merge(0,size-1,result);
+	//merge every two sequential sets
 
         auto stop = high_resolution_clock::now();
         auto duration = duration_cast<microseconds>(stop - start);

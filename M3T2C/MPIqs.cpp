@@ -143,7 +143,7 @@ int main(int argc, char** argv)
         auto stop = high_resolution_clock::now();
         auto duration = duration_cast<microseconds>(stop - start);
         
-        cout << "\n" << "final Vector: ";
+        cout << "\n" << "Sorted Vector: ";
         Print(result,size);
         cout << "\n";
 
